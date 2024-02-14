@@ -1,9 +1,15 @@
-var browserslist = require('../')
+let { test } = require('uvu')
+let { equal, is } = require('uvu/assert')
 
-it('selects dead browsers by keywords', () => {
-  expect(browserslist('dead')).toContain('ie 10')
+delete require.cache[require.resolve('..')]
+let browserslist = require('..')
+
+test('selects dead browsers by keywords', () => {
+  is.not(browserslist('dead').indexOf('ie 10'), -1)
 })
 
-it('selects dead browsers case insensitive', () => {
-  expect(browserslist('Dead')).toEqual(browserslist('dead'))
+test('selects dead browsers case insensitive', () => {
+  equal(browserslist('Dead'), browserslist('dead'))
 })
+
+test.run()

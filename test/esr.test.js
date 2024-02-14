@@ -1,12 +1,20 @@
-var browserslist = require('../')
+let { test } = require('uvu')
+let { equal, is } = require('uvu/assert')
 
-it('selects Firefox ESR', () => {
-  expect(browserslist('Firefox ESR')).toEqual(['firefox 60', 'firefox 52'])
+delete require.cache[require.resolve('..')]
+let browserslist = require('..')
+
+test('selects Firefox ESR', () => {
+  let versions = browserslist('Firefox ESR')
+  is(versions.length >= 1, true)
+  is(versions.every(i => /^firefox \d+$/.test(i)), true)
 })
 
-it('uses case insensitive aliases', () => {
-  var result = browserslist('Firefox ESR')
-  expect(browserslist('firefox esr')).toEqual(result)
-  expect(browserslist('ff esr')).toEqual(result)
-  expect(browserslist('fx esr')).toEqual(result)
+test('uses case insensitive aliases', () => {
+  let result = browserslist('Firefox ESR')
+  equal(browserslist('firefox esr'), result)
+  equal(browserslist('ff esr'), result)
+  equal(browserslist('fx esr'), result)
 })
+
+test.run()

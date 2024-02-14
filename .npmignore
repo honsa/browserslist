@@ -1,14 +1,6 @@
-node_modules/
-npm-debug.log
-yarn-error.log
-yarn.lock
-
-benchmark/
-coverage/
 test/
-__mocks__/
-appveyor.yml
-.travis.yml
+coverage/
 
-.editorconfig
 img/
+tsconfig.json
+grammar.w3c-ebnf

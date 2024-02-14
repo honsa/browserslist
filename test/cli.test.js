@@ -1,180 +1,181 @@
-var spawn = require('cross-spawn')
-var path = require('path')
+delete require.cache[require.resolve('..')]
 
-var browserslist = require('../')
-var pkg = require('../package.json')
+let { test } = require('uvu')
+let { is, equal, match } = require('uvu/assert')
+let { join } = require('path')
+let spawn = require('cross-spawn')
 
-var STATS = path.join(__dirname, 'fixtures', 'stats.json')
-var CONF = path.join(__dirname, 'fixtures', 'env-config', 'browserslist')
+let browserslist = require('..')
+let pkg = require('../package.json')
 
-function toArray (data) {
-  return data.toString().split('\n').filter(Boolean)
-}
+let STATS = '--stats=' + join(__dirname, 'fixtures/stats.json')
+let CONF = '--config=' + join(__dirname, 'fixtures/env-config/browserslist')
 
-function run () {
-  var args = Array.prototype.slice.call(arguments, 0)
-  var opts = { }
+function run(args) {
+  let opts = {}
   if (typeof args[0] === 'object') {
     opts = args[0]
     args = []
   }
-  var cli = spawn(path.join(__dirname, '..', 'cli.js'), args, opts)
+  let cli = spawn(join(__dirname, '..', 'cli.js'), args, opts)
   return new Promise(resolve => {
-    var out = ''
+    let stdout = ''
+    let stderr = ''
     cli.stdout.on('data', data => {
-      out += data.toString()
+      stdout += data.toString()
     })
     cli.stderr.on('data', data => {
-      out += data.toString()
-    })
-    cli.on('close', () => {
-      resolve(out)
-    })
-  })
-}
-
-function err () {
-  var args = Array.prototype.slice.call(arguments, 0)
-  var opts = { }
-  if (typeof args[0] === 'object') {
-    opts = args[0]
-    args = []
-  }
-  var cli = spawn(path.join(__dirname, '..', 'cli.js'), args, opts)
-  return new Promise(resolve => {
-    var error = ''
-    var out = ''
-    cli.stdout.on('data', data => {
-      out += data.toString()
-    })
-    cli.stderr.on('data', data => {
-      error += data.toString()
+      stderr += data.toString()
     })
     cli.on('close', code => {
-      expect(out).toEqual('')
-      expect(code).not.toEqual(0)
-      resolve(error)
+      resolve({ code: code || 0, stdout, stderr })
     })
   })
 }
 
-it('returns help', () => {
-  return run('--help').then(out => {
-    expect(out).toContain('Usage:')
-  }).then(() => {
-    return run('-h')
-  }).then(out => {
-    expect(out).toContain('Usage:')
-  })
+async function err(...args) {
+  let { code, stdout, stderr } = await run(args)
+  is(stdout, '')
+  is.not(code, 0)
+  return stderr
+}
+
+async function out(...args) {
+  let { code, stdout, stderr } = await run(args)
+  is(stderr, '')
+  is(code, 0)
+  return stdout
+}
+
+async function arr(...args) {
+  let stdout = await out(...args)
+  return stdout.split('\n').filter(Boolean)
+}
+
+function coverage(query, area) {
+  let result = browserslist.coverage(query, area)
+  return Math.round(result * 100) / 100.0
+}
+
+function ie8cov(area) {
+  return coverage(['ie 8'], area)
+}
+
+test('returns help', async () => {
+  match(await out('--help'), 'Usage:')
+  match(await out('-h'), 'Usage:')
 })
 
-it('returns version', () => {
-  var result = pkg.name + ' ' + pkg.version + '\n'
-  return run('--version').then(out => {
-    expect(out).toEqual(result)
-  }).then(() => {
-    return run('-v')
-  }).then(out => {
-    expect(out).toEqual(result)
-  })
+test('returns version', async () => {
+  let result = pkg.name + ' ' + pkg.version + '\n'
+  is(await out('--version'), result)
+  is(await out('-v'), result)
 })
 
-it('returns error: `unknown arguments`', () => {
-  return err('--unknown').then(out => {
-    expect(out).toContain('Unknown arguments')
-  })
+test('returns error: `unknown arguments`', async () => {
+  match(await err('--unknown'), 'Unknown arguments')
 })
 
-it('selects last 2 versions', () => {
-  var query = 'last 2 versions'
-  return run(query).then(out => {
-    expect(toArray(out)).toEqual(browserslist([query]))
-  })
+test('selects last 2 versions', async () => {
+  equal(await arr('last 2 versions'), browserslist('last 2 versions'))
 })
 
-it('uses case insensitive aliases', () => {
-  var query = 'Explorer > 10'
-  return run(query).then(out => {
-    expect(toArray(out)).toEqual(browserslist([query]))
-  })
+test('uses case insensitive aliases', async () => {
+  equal(await arr('Explorer > 10'), browserslist('Explorer > 10'))
 })
 
-it('returns error `unknown browser query`', () => {
-  return err('unknow').then(out => {
-    expect(out).toEqual('browserslist: Unknown browser query `unknow`\n')
-  })
+test('returns error `unknown browser query`', async () => {
+  is(
+    await err('unknow'),
+    'browserslist: Unknown browser query `unknow`. ' +
+      'Maybe you are using old Browserslist or made typo in query.\n'
+  )
 })
 
-it('returns usage in specified country', () => {
-  return run('--coverage=US', 'ie 8').then(out => {
-    var result = browserslist.coverage(['ie 8'], 'US')
-    var round = Math.round(result * 100) / 100.0
-    expect(out).toContain(round + '%')
-  })
+test('returns usage in specified country', async () => {
+  match(
+    await out('--coverage=US', 'ie 8'),
+    `These browsers account for ${ie8cov('US')}% of all users in the US`
+  )
 })
 
-it('returns error on missed queries', () => {
-  return err('--coverage').then(out => {
-    expect(out).toContain('Define queries or config path.\n\nUsage:')
-  })
+test('returns usage in specified ares', async () => {
+  let post = '% of all users '
+  match(
+    await out('--coverage=US,alt-AS,global', 'ie 8'),
+    `These browsers account for ${ie8cov('US') + post}in the US\n` +
+      `                           ${ie8cov('alt-AS') + post}in the ALT-AS\n` +
+      `                           ${ie8cov() + post}globally\n`
+  )
 })
 
-it('returns error: `unknown browser query to get coverage`', () => {
-  return err('--coverage=UK', 'ie8').then(out => {
-    expect(out).toEqual('browserslist: Unknown browser query `ie8`\n')
-  })
+test('returns error: `unknown browser query to get coverage`', async () => {
+  is(
+    await err('--coverage=UK', 'ie8'),
+    'browserslist: Unknown browser query `ie8`. ' +
+      'Maybe you are using old Browserslist or made typo in query.\n'
+  )
 })
 
-it('reads browserslist config', () => {
-  return run('--config=' + CONF).then(out => {
-    expect(toArray(out)).toEqual(['ie 11', 'ie 10'])
-  })
+test('reads browserslist config', async () => {
+  equal(await arr(CONF), ['ie 11', 'ie 10'])
 })
 
-it('reads browserslist config from current directory', () => {
-  return run({ cwd: path.join(__dirname, 'fixtures') }).then(out => {
-    expect(toArray(out)).toEqual(['ie 11', 'ie 10'])
-  })
+test('reads browserslist config from current directory', async () => {
+  let cwd = join(__dirname, 'fixtures')
+  equal(await arr({ cwd }), ['ie 11', 'ie 10'])
 })
 
-it('returns error browserslist config', () => {
-  return err('--config="./unknown_path"').then(out => {
-    expect(out).toEqual('browserslist: Can\'t read ./unknown_path config\n')
-  })
+test('returns error browserslist config', async () => {
+  is(
+    await err('--config="./unknown_path"'),
+    "browserslist: Can't read ./unknown_path config\n"
+  )
 })
 
-it('reads browserslist config: env production', () => {
-  return run('--config=' + CONF, '--env="production"').then(out => {
-    expect(toArray(out)).toEqual(['ie 9', 'opera 41'])
-  })
+test('reads browserslist config: env production', async () => {
+  equal(await arr(CONF, '--env="production"'), ['ie 9', 'opera 41'])
 })
 
-it('returns usage from config', () => {
-  return run('--config=' + CONF, '--coverage').then(out => {
-    var result = browserslist.coverage(['ie 11', 'ie 10'])
-    var round = Math.round(result * 100) / 100.0
-    expect(out).toContain(round + '%')
-  })
+test('returns usage from config', async () => {
+  let result = coverage(['ie 11', 'ie 10'])
+  match(await out(CONF, '--coverage'), `${result}`)
 })
 
-it('supports custom stats', () => {
-  return run('--stats=' + STATS, '> 5% in my stats').then(out => {
-    expect(toArray(out)).toEqual(['ie 11', 'ie 10'])
-  })
+test('supports custom stats', async () => {
+  equal(await arr(STATS, '> 5% in my stats'), ['ie 11', 'ie 10'])
 })
 
-it('supports custom stats in coverage', () => {
-  return run('--coverage', '--stats=' + STATS, '> 5% in my stats').then(out => {
-    expect(out).toEqual(
-      'These browsers account for 15.7% of all users in custom statistics\n')
-  })
+test('supports custom stats in coverage', async () => {
+  is(
+    await out('--coverage', STATS, '> 5% in my stats'),
+    'These browsers account for 15.7% of all users in custom statistics\n'
+  )
 })
 
-it('shows Browserslist error', () => {
-  return err({ cwd: path.join(__dirname, 'fixtures', 'wrong1') }).then(out => {
-    expect(out).toEqual(
-      'browserslist: Browserslist config ' +
+test('shows Browserslist error', async () => {
+  is(
+    await err({ cwd: join(__dirname, 'fixtures', 'wrong1') }),
+    'browserslist: Browserslist config ' +
       'should be a string or an array of strings with browser queries\n'
-    )
-  })
+  )
 })
+
+test('supports JSON', async () => {
+  is(
+    await out('--json', '"ie 8"'),
+    '{\n  "browsers": [\n    "ie 8"\n  ]\n}\n'
+  )
+})
+
+test('supports JSON with coverage', async () => {
+  is(
+    await out('--json', '--coverage=US', '"ie 8"'),
+    '{\n' +
+      '  "browsers": [\n    "ie 8"\n  ],\n' +
+      `  "coverage": {\n    "US": ${ie8cov('US')}\n  }\n` +
+      '}\n'
+  )
+})
+
+test.run()

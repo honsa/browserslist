@@ -1,17 +1,22 @@
-var BrowserslistError = require('../error')
+let { test } = require('uvu')
+let { equal } = require('uvu/assert')
 
-var originCapture = Error.captureStackTrace
-afterEach(function () {
+let BrowserslistError = require('../error')
+
+let originCapture = Error.captureStackTrace
+test.after.each(() => {
   Error.captureStackTrace = originCapture
 })
 
-it('sets stack', function () {
-  var error = new BrowserslistError('test')
-  expect(typeof error.stack).toEqual('string')
+test('sets stack', () => {
+  let error = new BrowserslistError('test')
+  equal(typeof error.stack, 'string')
 })
 
-it('works in Firefox', function () {
+test('works in Firefox', () => {
   Error.captureStackTrace = undefined
-  var error = new BrowserslistError('test')
-  expect(error.stack).toBeUndefined()
+  let error = new BrowserslistError('test')
+  equal(error.stack, undefined)
 })
+
+test.run()

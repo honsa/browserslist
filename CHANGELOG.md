@@ -1,6 +1,354 @@
 # Change Log
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 4.23.0
+* Added `BROWSERSLIST_ROOT_PATH` (by @teleclimber).
+
+## 4.22.3
+* Fixed white spaces support in `supports` query (@g-plane).
+* Fixed shared config like `@company/package/browserslist-config` (@boucodes).
+
+## 4.22.2
+* Fixed idempotency in time queries with `mobileToDesktop` (by Aliaksei Sapach).
+
+## 4.22.1
+* Updated Firefox ESR (by @lerkor).
+
+## 4.22
+* Added `fully supports` query (by Ben Scott).
+* Added `partially supports` alias for `supports` query (by Ben Scott).
+
+## 4.21.11
+* Added warning to `--update-db` to move to new CLI (by Ivan Vasilev).
+* Fixed docs (by Tatsunori Uchino).
+
+## 4.21.10
+* Updated Firefox ESR.
+
+## 4.21.9
+* Fixed Opera Mobile edge cases (by Steve Repsher).
+
+## 4.21.8
+* Fixed `supports` query and `mobileToDesktop` (by Steve Repsher).
+
+## 4.21.7
+* Fixed last queries for Android (by Steve Repsher).
+
+## 4.21.6
+* Fixed time queries with `mobileToDesktop` (by Steve Repsher).
+* Fixed docs (by Tatsunori Uchino, Will Stone, and Dominik Pschenitschni).
+
+## 4.21.5
+* Fixed running Browserslist in browser environment.
+
+## 4.21.4
+* Updated Firefox ESR.
+
+## 4.21.3
+* Improved unknown region and unknown feature error (by Alexander Chabin).
+
+## 4.21.2
+* Updated Firefox ESR.
+
+## 4.21.1
+* Fixed parsing days in `since` query.
+
+## 4.21
+* IE 11 was added to `dead` and removed from `defaults` (by Albert Portnoy).
+* Added `browserslist.parse()` to get config AST for analysis.
+* Moved `--update-db` script to `update-browserslist-db` tool.
+* Fixed Unicode BOM support in `package.json`.
+
+## 4.20.4
+* Fixed Opera in `mobileToDesktop` (by Pig Fang).
+
+## 4.20.3
+* Added `Baidu` to `dead` browsers (by Igor Lukanin).
+
+## 4.20.2
+* Fixed `package.funding` URL format.
+
+## 4.20.1
+* Fixed `package.funding`.
+* Fixed docs (by Michael Lohmann).
+
+## 4.20
+* Added `last 2 node versions` and `last 2 node major versions` (by @g-plane).
+
+## 4.19.3
+* Updated Firefox ESR (by Christophe Coevoet).
+
+## 4.19.2
+* Fixed `--help` output.
+
+## 4.19.1
+* Fixed `throwOnMissing` types (by Øyvind Saltvik).
+
+## 4.19
+* Added queries grammar definition (by Pig Fang).
+* Added `throwOnMissing` option (by Øyvind Saltvik).
+* Fixed `null` data ignoring in `< 50% in CN` (byPig Fang).
+* Fixed data parsing in `in my stats` (by Sun Xiaoran).
+* Fixed `yarn.lock` support with `integrity` (by Alexey Berezin).
+* Fixed Yarn Berry error message in `--update-db`.
+
+## 4.18.1
+* Fixed case inventiveness for `cover` queries (by Pig Fang).
+* Fixed `since 1970` query for `null` in release date (by Pig Fang).
+
+## 4.18
+* Added `--ignore-unknown-versions` CLI option (by Pig Fang).
+
+## 4.17.6
+* Fixed sharable config resolution (by Adaline Valentina Simonian).
+
+## 4.17.5
+* Fixed `--update-db` for some `pnpm` cases.
+
+## 4.17.4
+* Reduced package size.
+
+## 4.17.3
+* Use `picocolors` for color output in `--update-db`.
+
+## 4.17.2
+* Reduced package size.
+
+## 4.17.1
+* Use Nano Colors for color output in `--update-db`.
+
+## 4.17
+* Added `yarn` 3 support to `--update-db` (by Himank Pathak).
+
+## 4.16.8
+* Updated Firefox ESR.
+
+## 4.16.7
+* Fixed `oudated caniuse-lite` warning text (by Paul Verest).
+* Fixed docs (by Alexander Belov).
+
+## 4.16.6
+* Fixed `npm-shrinkwrap.json` support in `--update-db` (by Geoff Newman).
+
+## 4.16.5
+* Fixed unsafe RegExp (by Yeting Li).
+
+## 4.16.4
+* Fixed unsafe RegExp.
+* Added artifactory support to `--update-db` (by Ittai Baratz).
+
+## 4.16.3
+* Fixed `--update-db`.
+
+## 4.16.2
+* Fixed `--update-db` (by @ialarmedalien).
+
+## 4.16.1
+* Fixed Chrome 4 with `mobileToDesktop` (by Aron Woost).
+
+## 4.16
+* Add `browserslist config` query.
+
+## 4.15
+* Add TypeScript types (by Dmitry Semigradsky).
+
+## 4.14.7
+* Fixed Yarn Workspaces support to `--update-db` (by Fausto Núñez Alberro).
+* Added browser changes to `--update-db` (by @AleksandrSl).
+* Added color output to `--update-db`.
+* Updated `package.funding` to have link to our Open Collective.
+
+## 4.14.6
+* Fixed Yarn support in `--update-db` (by Ivan Storck).
+* Fixed npm 7 support in `--update-db`.
+
+## 4.14.5
+* Fixed `last 2 electron versions` query (by Sergey Melyukov).
+
+## 4.14.4
+* Fixed `Unknown version 59 of op_mob` error.
+
+## 4.14.3
+* Update Firefox ESR.
+
+## 4.14.2
+* Fixed `--update-db` on Windows (by James Ross).
+* Improved `--update-db` output.
+
+## 4.14.1
+* Added `--update-db` explanation (by Justin Zelinsky).
+
+## 4.14
+* Add `BROWSERSLIST_DANGEROUS_EXTEND` support (by Timo Mayer).
+
+## 4.13
+* Added `supports` query to select browsers (by Jesús Leganés-Combarro).
+
+## 4.12.2
+* Update Firefox ESR.
+
+## 4.12.1
+* Update `package.json` scanning tool for `--update-db` (by Luke Edwards).
+* Improve docs (by Mukundan Senthil).
+* Drop Node.js 13.0-13.6 support because of ES modules bug in that versions.
+
+## 4.12
+* Add environments to shared configs (by Yevgeny Petukhov).
+* Fix docs (by Dmitry Statsenko and Thomas Pozzo di Borgo).
+
+## 4.11.1
+* Fix Node.js 6 support.
+
+## 4.11
+* Add `npx browserslist --mobile-to-desktop` (by James Ross).
+
+## 4.10
+* Add `npx browserslist --update-db` (by Ivan Solovev).
+
+## 4.9.1
+* Normalize incorrect Can I Use regional data (by Huáng Jùnliàng).
+
+## 4.9
+* Add `node X-Y` query support (by Yuping Zuo).
+
+## 4.8.7
+* Fix `last N major versions` (by Valeriy Trubachev).
+
+## 4.8.6
+* Fix `Unknown version 10 of op_mob` error in `mobileToDesktop` option.
+
+## 4.8.5
+* Fix `last N browsers` again after new `caniuse-db` API changes.
+
+## 4.8.4
+* Fix released versions detection for queries like `last N browsers`.
+* Add IE 11 Mobile to `dead` browsers.
+
+## 4.8.3
+* Fix warning message (by Anton Ivanov).
+
+## 4.8.2
+* Fix `Cannot convert undefined or null to object` (by Antoine Clausse).
+* Fix `mobileToDesktop` in `defaults` (by Huáng Jùnliàng).
+
+## 4.8.1
+* Fix Chrome and `mobileToDesktop` (by Huáng Jùnliàng).
+
+## 4.8
+* Add `> 5% in browserslist-config-my stats` query (by Andrew Leedham).
+* Improve docs (by Danny van Kooten).
+
+## 4.7.3
+* Add funding link for `npm fund`.
+
+## 4.7.2
+* Add cache for query parsing.
+* Improve config caching (by Kārlis Gaņģis).
+* Update Firefox ESR.
+
+## 4.7.1
+* Improve caching.
+
+## 4.7
+* Add PhantomJS queries.
+* Improve docs (by Dorian Koehring).
+
+## 4.6.6
+* Remove Safari from `dead` query.
+
+## 4.6.5
+* Add Samsung 4 browser to `dead` query.
+* Remove dirty fix for `android all` error.
+
+## 4.6.4
+* Add Firefox 68 to `Firefox ESR` query.
+
+## 4.6.3
+* Dirty fix for `android all` error.
+
+## 4.6.2
+* Fix `last x version` and similar queries for Android (by Tony Ross).
+
+## 4.6.1
+* Fix patch version support for Electron (by Kilian Valkhof).
+
+## 4.6
+* Add `mobileToDesktop` option (by Nicolò Ribaudo).
+
+## 4.5.6
+* Make `Node > 5` and `node > 5` queries case insensitive.
+
+## 4.5.5
+* Fix CLI help (by Marcel Gerber).
+* Add KaiOS browser to docs.
+
+## 4.5.4
+* Update docs (by Andrew Leedham and Dan Onoshko).
+
+## 4.5.3
+* Fix splitting string to queries.
+
+## 4.5.2
+* Show default browsers in CLI on project without config.
+
+## 4.5.1
+* Improve text for the warning about outdated `caniuse-lite`.
+
+## 4.5
+* Add `>=`, `>`, and `<=` support for Node.js version (by Mathspy Terabithian).
+
+## 4.4.2
+* Allow to have string in `package.json` (by @dmarkhas).
+
+## 4.4.1
+* Allow to use `.` in scope name of shareable config (by Gustav Nikolaj).
+
+## 4.4
+* Added `and` and `or` keywords to combine queries (by Jon Ege Ronnenberg).
+
+## 4.3.7
+* Fix fraction years support in `last 1.5 years` (by Clément P).
+* Fix version-less browser support.
+
+## 4.3.6
+* Fix version-less browser support in custom statistics (by Alex Walter).
+
+## 4.3.5
+* Fix `not` query for wrong Can I Use data.
+
+## 4.3.4
+* Allow to update `node-releases` without new Browserslist releases.
+
+## 4.3.3
+* Fix Node.js 11 support.
+
+## 4.3.2
+* Fix `Unknown version 11 of Node.js` error (by Dan Onoshko).
+
+## 4.3.1
+* Fix conflict between `caniuse-lite` and custom browsers statistics.
+
+## 4.3
+* Allow to use `extends browserslist-config-a/file` (by @Schweinepriester).
+
+## 4.2.1
+* Use new `node-releases` support (by Sergey Rubanov).
+
+## 4.2
+* Add `--json` argument for CLI.
+* Allow to pass multiple areas in CLI by `--coverage=US,alt-AS,global`.
+
+## 4.1.2
+* Better `unknow query` error message.
+* Use latest `node-releases`.
+
+## 4.1.1
+* Update Firefox ESR versions.
+
+## 4.1
+* Add `current node` query.
+* Add contributors widget to docs (by Sergey Surkov).
+
 ## 4.0.2
 * Fix new `node-releases` support (by Sergey Rubanov).
 * Fix error text (by Josh Smith).
