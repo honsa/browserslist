@@ -1,6 +1,24 @@
 # Change Log
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## 4.24.2
+* Clarify outdated `caniuse-lite` warning text.
+
+## 4.24.1
+* Added months since last `caniuse-lite` update to the warning (by @mezhnin).
+
+## 4.24.0
+* Added `browserslist.findConfigFile()` helper (by @JLHwung).
+
+## 4.23.3
+* Fixed `>=` query for `ios` (by @syi0808).
+
+## 4.23.2
+* Updated Firefox ESR.
+
+## 4.23.1
+* Fixed feature query with mobile to desktop when caniuse lags (by @steverep).
+
 ## 4.23.0
 * Added `BROWSERSLIST_ROOT_PATH` (by @teleclimber).
 
